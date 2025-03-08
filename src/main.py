@@ -5,7 +5,7 @@ import numpy as np
 import time
 from streamlit_gsheets import GSheetsConnection
 #Title
-st.title("Encuentro Juvenil")
+st.title("Dashboard")
 #Refresh
 if st.button("Refrescar"):
     st.cache_resource.clear()

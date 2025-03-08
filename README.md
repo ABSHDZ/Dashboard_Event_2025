@@ -1,4 +1,4 @@
-Dashboard
+#Dashboard
 
 This app was created to sumarize the data collected during an event
 

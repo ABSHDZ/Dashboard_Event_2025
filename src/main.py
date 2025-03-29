@@ -1,9 +1,12 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
 import time
 from streamlit_gsheets import GSheetsConnection
+import json
+from urllib.request import urlopen
 #Title
 st.title("Dashboard")
 #Refresh
@@ -47,6 +50,27 @@ fig.update(layout_showlegend=True)
 fig.update_layout(title="Procedencia")
 containerPie = st.container(border=True)
 containerPie.plotly_chart(fig)
+#Map
+with urlopen('https://raw.githubusercontent.com/angelnmara/geojson/refs/heads/master/mexicoHigh.json') as response:
+    counties = json.load(response)
+map_dataframe  = pd.DataFrame({
+    "Municipios": conteo.index,
+    "Asistencia": conteo.values,
+})
+print(map_dataframe["Municipios"][1])
+print(counties["features"][0]["properties"])
+fig3 = px.choropleth_map(map_dataframe, geojson=counties, locations="Municipios", 
+                           featureidkey="properties.name",
+                           color="Asistencia",
+                           color_continuous_scale="Sunsetdark",
+                           map_style="carto-positron",
+                           zoom=3, center = {"lat": 23.6345, "lon": -102.5527},
+                           opacity=0.5,
+                           labels={'unemp':'unemployment rate'}
+                          )
+fig3.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+containerMap = st.container(border=True)
+containerMap.plotly_chart(fig3)
 #Trendline
 interacciones = pd.to_datetime(df["Marca temporal"].values, format="%d/%m/%Y %H:%M:%S")
 interacionesLimpias = interacciones.strftime("%Y-%m-%d")
